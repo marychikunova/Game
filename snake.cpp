@@ -22,8 +22,12 @@ public:
     int num = 0;
 };
 
-class Fruit: public common_elements
+class Fruit
 {
+public:
+    int x[100];
+    int y[100];
+    int num = 0;
 };
 
 enum eDirecton { STOP = 0, LEFT, RIGHT, UP, DOWN};
@@ -37,14 +41,13 @@ public:
     const int height = 20;
     int score;
 
-    std::vector<common_elements*> game_objects_;
-
     Fruit Fruit;
     Snake Snake;
     Tail Tail;
 
     game_manager();
-   ~game_manager();
+    ~game_manager();
+    void add_obj();
 
     void Setup();
     void Draw();
@@ -52,12 +55,19 @@ public:
     void Logic();
 };
 
-game_manager::game_manager():
-    game_objects_(std::vector<common_elements*> ())
+game_manager::game_manager()
 {}
 
 game_manager::~game_manager()
 {}
+
+void game_manager::add_obj()
+{
+    int n = Fruit.num;
+    Fruit.x[n] = rand() % width;
+    Fruit.y[n] = rand() % height;
+    Fruit.num++;
+}
 
 void game_manager::Setup()
 {
@@ -65,8 +75,12 @@ void game_manager::Setup()
     dir = STOP;
     Snake.x = width / 2;
     Snake.y = height / 2;
-    Fruit.x = rand() % width;
-    Fruit.y = rand() % height;
+    Fruit.x[0] = rand() % width;
+    Fruit.y[0] = rand() % height;
+
+    Fruit.x[1] = rand() % width;
+    Fruit.y[1] = rand() % height;
+    Fruit.num = 2;
     score = 0;
 }
 
@@ -79,13 +93,20 @@ void game_manager::Draw()
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
+            bool FruitPrint = false;
             if (j == 0)
                 std::cout << "#";
             if (i == Snake.y && j == Snake.x)
                 std::cout << "O";
-            else if (i == Fruit.y && j == Fruit.x)
-                std::cout << "F";
-            else {
+            else if (!FruitPrint) {
+                for(int l = 0; l < Fruit.num; ++l) {
+                    if (i == Fruit.y[l] && j == Fruit.x[l]) {
+                        std::cout << "F";
+                        FruitPrint = true;
+                    }
+                }
+            }
+            if (!FruitPrint){
                 bool print = false;
                 for (int k = 0; k < Tail.num; k++) {
                     if (Tail.x[k] == j && Tail.y[k] == i) {
@@ -96,7 +117,6 @@ void game_manager::Draw()
                 if (!print)
                     std::cout << " ";
             }
-
 
             if (j == width - 1)
                 std::cout << "#";
@@ -174,11 +194,14 @@ void game_manager:: Logic()
         if (Tail.x[i] == Snake.x && Tail.y[i] == Snake.y)
             gameOver = true;
 
-    if (Snake.x == Fruit.x && Snake.y == Fruit.y) {
-        score += 10;
-        Fruit.x = rand() % width;
-        Fruit.y = rand() % height;
-        Tail.num++;
+    for(int i = 0; i < Fruit.num; ++i) {
+        if (Snake.x == Fruit.x[i] && Snake.y == Fruit.y[i]) {
+            score += 10;
+            Fruit.x[i] = rand() % width;
+            Fruit.y[i] = rand() % height;
+            add_obj();
+            Tail.num++;
+        }
     }
 }
 
