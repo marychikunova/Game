@@ -77,10 +77,7 @@ void game_manager::Setup()
     Snake.y = height / 2;
     Fruit.x[0] = rand() % width;
     Fruit.y[0] = rand() % height;
-
-    Fruit.x[1] = rand() % width;
-    Fruit.y[1] = rand() % height;
-    Fruit.num = 2;
+    Fruit.num = 1;
     score = 0;
 }
 
@@ -93,20 +90,22 @@ void game_manager::Draw()
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            bool FruitPrint = false;
+            bool Printsmth = false;
             if (j == 0)
                 std::cout << "#";
-            if (i == Snake.y && j == Snake.x)
+            if (i == Snake.y && j == Snake.x) {
                 std::cout << "O";
-            else if (!FruitPrint) {
+                Printsmth = true;
+            }
+            else if (!Printsmth) {
                 for(int l = 0; l < Fruit.num; ++l) {
                     if (i == Fruit.y[l] && j == Fruit.x[l]) {
                         std::cout << "F";
-                        FruitPrint = true;
+                        Printsmth = true;
                     }
                 }
             }
-            if (!FruitPrint){
+            if (!Printsmth){
                 bool print = false;
                 for (int k = 0; k < Tail.num; k++) {
                     if (Tail.x[k] == j && Tail.y[k] == i) {
