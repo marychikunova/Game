@@ -105,17 +105,16 @@ void game_manager::Draw()
                     }
                 }
             }
-            if (!Printsmth){
-                bool print = false;
+            else if (!Printsmth){
                 for (int k = 0; k < Tail.num; k++) {
                     if (Tail.x[k] == j && Tail.y[k] == i) {
                         std::cout << "o";
-                        print = true;
+                        Printsmth = true;
                     }
                 }
-                if (!print)
-                    std::cout << " ";
             }
+            else if (!Printsmth)
+                    std::cout << " ";
 
             if (j == width - 1)
                 std::cout << "#";
