@@ -55,7 +55,6 @@ public:
 
     void Setup();
     void Draw();
-    void Input();
     void Logic();
 };
 
@@ -149,7 +148,7 @@ void game_manager::Draw()
     std::cout << "Score:" << score << std::endl;
 }
 
-void game_manager:: Input()
+void Input(game_manager& manager)
 {
     if (_kbhit()) {
         switch (_getch()) {
@@ -166,7 +165,7 @@ void game_manager:: Input()
                 dir = DOWN;
             break;
             case 'x':
-                gameOver = true;
+                manager.gameOver = true;
             break;
         }
     }
@@ -187,6 +186,7 @@ void game_manager:: Logic()
         prevX = prev2X;
         prevY = prev2Y;
     }
+
     switch (dir) {
         case LEFT:
             Snake.x--;
@@ -203,13 +203,10 @@ void game_manager:: Logic()
         default:
         break;
     }
-
     /*if (x > width || x < 0 || y > height || y < 0) //если столкновение со стенками запрещено
         gameOver = true;*/
-
     if (Snake.x >= width) Snake.x = 0; else if (Snake.x < 0) Snake.x = width - 1;
     if (Snake.y >= height) Snake.y = 0; else if (Snake.y < 0) Snake.y = height - 1;
-
     for (int i = 0; i < Tail.num; i++)
         if (Tail.x[i] == Snake.x && Tail.y[i] == Snake.y)
             gameOver = true;
@@ -232,7 +229,7 @@ int main()
 
     while (!manager.gameOver)  {
         manager.Draw();
-        manager.Input();
+        Input(manager);
         manager.Logic();
         Sleep(10); //sleep(10);
     }
