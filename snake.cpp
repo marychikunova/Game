@@ -12,6 +12,8 @@ public:
 
 class Snake: public common_elements
 {
+public:
+    bool Draw(int i, int j);
 };
 
 class Tail
@@ -20,6 +22,7 @@ public:
     int x[100];
     int y[100];
     int num = 0;
+    void Draw(int i, int j);
 };
 
 class Fruit
@@ -28,6 +31,7 @@ public:
     int x[100];
     int y[100];
     int num = 0;
+    bool Draw(int i, int j);
 };
 
 enum eDirecton { STOP = 0, LEFT, RIGHT, UP, DOWN};
@@ -81,6 +85,37 @@ void game_manager::Setup()
     score = 0;
 }
 
+bool Snake::Draw(int i, int j) {
+    if(i == y && j == x) {
+        std::cout << "O";
+        return true;
+    }
+    else return false;
+}
+
+void Tail::Draw(int i, int j) {
+    bool print = false;
+    for (int k = 0; k < num; k++) {
+        if (x[k] == j && y[k] == i) {
+            std::cout << "o";
+            print = true;
+        }
+    }
+    if (!print)
+        std::cout << " ";
+}
+
+bool Fruit::Draw(int i, int j) {
+    bool print = false;
+    for(int l = 0; l < num; ++l) {
+        if (i == y[l] && j == x[l]) {
+            std::cout << "F";
+            print = true;
+        }
+    }
+    return print;
+}
+
 void game_manager::Draw()
 {
     system("cls"); //system("clear");
@@ -93,28 +128,14 @@ void game_manager::Draw()
             bool Printsmth = false;
             if (j == 0)
                 std::cout << "#";
-            if (i == Snake.y && j == Snake.x) {
-                std::cout << "O";
-                Printsmth = true;
+            if (!Printsmth) {
+                Printsmth = Snake.Draw(i, j);
             }
-            else if (!Printsmth) {
-                for(int l = 0; l < Fruit.num; ++l) {
-                    if (i == Fruit.y[l] && j == Fruit.x[l]) {
-                        std::cout << "F";
-                        Printsmth = true;
-                    }
-                }
+            if (!Printsmth) {
+                Printsmth = Fruit.Draw(i, j);
             }
             if (!Printsmth){
-                bool print = false;
-                for (int k = 0; k < Tail.num; k++) {
-                    if (Tail.x[k] == j && Tail.y[k] == i) {
-                        std::cout << "o";
-                        print = true;
-                    }
-                }
-                if (!print)
-                    std::cout << " ";
+                Tail.Draw(i, j);
             }
 
             if (j == width - 1)
@@ -215,5 +236,5 @@ int main()
         manager.Logic();
         Sleep(10); //sleep(10);
     }
-    return 0;
+  return 0;
 }
