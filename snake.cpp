@@ -9,7 +9,8 @@ public:
     int x[100];
     int y[100];
     int num = 0;
-    bool Draw(int i, int j, char symbol);
+    char type; //Fruit = 0, Tail = 1;
+    bool Draw(int i, int j);
 };
 
 class Snake
@@ -40,6 +41,9 @@ public:
     Fruit Fruit;
     Snake Snake;
     Tail Tail;
+
+    int max_elems = 0;
+    common_elements* elems[100];
 
     game_manager();
     ~game_manager();
@@ -74,6 +78,12 @@ void game_manager::Setup()
     Fruit.y[0] = rand() % height;
     Fruit.num = 1;
     score = 0;
+
+    Fruit.type = 'F';
+    elems[0] = &Fruit;
+    Tail.type = 'o';
+    elems[1] = &Tail;
+    max_elems = 2;
 }
 
 bool Snake::Draw(int i, int j) {
@@ -84,13 +94,16 @@ bool Snake::Draw(int i, int j) {
     else return false;
 }
 
-bool common_elements::Draw(int i, int j, char symbol) {
+bool common_elements::Draw(int i, int j) {
     bool print = false;
     for (int k = 0; k < num; k++) {
         if (x[k] == j && y[k] == i) {
-            std::cout << symbol;
+            std::cout << type;
             print = true;
         }
+    }
+    if(!print && type == 'o') {
+        std::cout << ' ';
     }
     return print;
 }
@@ -110,14 +123,11 @@ void game_manager::Draw()
             if (!Printsmth) {
                 Printsmth = Snake.Draw(i, j);
             }
-            if (!Printsmth) {
-                Printsmth = Fruit.Draw(i, j, 'F');
+            for(int r = 0; r < max_elems; r++) {
+                if (!Printsmth) {
+                    Printsmth = elems[r]->Draw(i,j);
+                }
             }
-            if (!Printsmth){
-                if(!Tail.Draw(i, j, 'o'))
-                    std::cout << " ";
-            }
-
             if (j == width - 1)
                 std::cout << "#";
         }
@@ -216,3 +226,4 @@ int main()
     }
   return 0;
 }
+
