@@ -47,6 +47,7 @@ public:
 
     game_manager();
     ~game_manager();
+    void add_obj(common_elements* ptr);
     void add_obj();
 
     void Setup();
@@ -68,6 +69,10 @@ void game_manager::add_obj()
     Fruit.num++;
 }
 
+void game_manager::add_obj(common_elements* ptr) {
+    elems[max_elems] = ptr;
+    max_elems++;
+}
 void game_manager::Setup()
 {
     gameOver = false;
@@ -80,10 +85,9 @@ void game_manager::Setup()
     score = 0;
 
     Fruit.type = 'F';
-    elems[0] = &Fruit;
     Tail.type = 'o';
-    elems[1] = &Tail;
-    max_elems = 2;
+    add_obj(&Fruit);
+    add_obj(&Tail);
 }
 
 bool Snake::Draw(int i, int j) {
@@ -226,4 +230,3 @@ int main()
     }
   return 0;
 }
-
