@@ -9,7 +9,7 @@ public:
     int x[100];
     int y[100];
     int num = 0;
-    char type; //Fruit = 0, Tail = 1;
+    char type; //Fruit = F, Tail = o;
     bool Draw(int i, int j);
 };
 
