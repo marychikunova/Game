@@ -6,35 +6,27 @@
 class common_elements
 {
 public:
+    int x[100];
+    int y[100];
+    int num = 0;
+    bool Draw(int i, int j, char symbol);
+};
+
+class Snake
+{
+public:
     int x;
     int y;
-};
-
-class Snake: public common_elements
-{
-public:
     bool Draw(int i, int j);
 };
 
-class Tail
-{
-public:
-    int x[100];
-    int y[100];
-    int num = 0;
-    void Draw(int i, int j);
-};
+class Tail:public common_elements
+{};
 
-class Fruit
-{
-public:
-    int x[100];
-    int y[100];
-    int num = 0;
-    bool Draw(int i, int j);
-};
+class Fruit:public common_elements
+{};
 
-enum eDirecton { STOP = 0, LEFT, RIGHT, UP, DOWN};
+enum eDirecton {STOP = 0, LEFT, RIGHT, UP, DOWN};
 eDirecton dir;
 
 class game_manager
@@ -92,23 +84,11 @@ bool Snake::Draw(int i, int j) {
     else return false;
 }
 
-void Tail::Draw(int i, int j) {
+bool common_elements::Draw(int i, int j, char symbol) {
     bool print = false;
     for (int k = 0; k < num; k++) {
         if (x[k] == j && y[k] == i) {
-            std::cout << "o";
-            print = true;
-        }
-    }
-    if (!print)
-        std::cout << " ";
-}
-
-bool Fruit::Draw(int i, int j) {
-    bool print = false;
-    for(int l = 0; l < num; ++l) {
-        if (i == y[l] && j == x[l]) {
-            std::cout << "F";
+            std::cout << symbol;
             print = true;
         }
     }
@@ -131,10 +111,11 @@ void game_manager::Draw()
                 Printsmth = Snake.Draw(i, j);
             }
             if (!Printsmth) {
-                Printsmth = Fruit.Draw(i, j);
+                Printsmth = Fruit.Draw(i, j, 'F');
             }
             if (!Printsmth){
-                Tail.Draw(i, j);
+                if(!Tail.Draw(i, j, 'o'))
+                    std::cout << " ";
             }
 
             if (j == width - 1)
